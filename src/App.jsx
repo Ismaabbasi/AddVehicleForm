@@ -1,12 +1,22 @@
+import React from "react";
+import AddVhicleForm from "./Components/AddVhicleForm";
+import ViewVehicle from "./Components/ViewVehicle";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
-import React from 'react'
-import AddVhicleForm from './Components/AddVhicleForm'
 const App = () => {
   return (
-    <div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AddVhicleForm />}></Route>
+          <Route path="viewvehicle" element={<ViewVehicle />}></Route>
+        </Routes>
+      </BrowserRouter>
+      {/* <div>
     <AddVhicleForm />
-    </div>
-  )
-}
+    </div> */}
+    </>
+  );
+};
 
-export default App
+export default App;

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
+    "@inovua/reactdatagrid-community": "^5.9.5",
     "@mantine/core": "^6.0.16",
     "@mantine/dates": "^6.0.16",
     "@mantine/dropzone": "^6.0.16",
@@ -19,6 +20,7 @@
     "@mantine/modals": "^6.0.16",
     "dayjs": "^1.11.9",
     "react": "^18.2.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
