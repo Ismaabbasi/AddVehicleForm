@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDataGrid from "@inovua/reactdatagrid-community";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { Edit, EyeOff } from "tabler-icons-react";
@@ -125,8 +124,7 @@ const ViewVehicle = () => {
   const navigate = useNavigate();
   return (
     <>
-      {/* <ReactDataGrid /> */}
-
+      
       <div>
         {/* <h1 style={{ backgroundColor: "black", color: "white" }}>
           View Vehicle
