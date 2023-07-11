@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { DatePicker, DateInput } from "@mantine/dates";
 import { Upload, Photo, X } from "tabler-icons-react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Dropzone,
   IMAGE_MIME_TYPE,
@@ -26,9 +26,12 @@ import {
   Image,
   Alert,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 const AddVhicleForm = () => {
+  const [formValues, setFormValues] = useState({});
   const { classes } = useStyles();
-
+  const params = useParams();
+  const id = params?.id;
   const theme = useMantineTheme();
   const form = useForm({
     validateInputOnChange: true,
@@ -51,6 +54,7 @@ const AddVhicleForm = () => {
       driveTrain: "",
       cylinders: "",
       fuelType: "",
+      horsePower: "",
       document: [],
       image: [],
       keyImage: [],
@@ -99,42 +103,92 @@ const AddVhicleForm = () => {
     form.setFieldValue("keyImage", []);
   };
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
+  const getFormValues = () => {
+    const token = localStorage.getItem("token");
+    axios
+      .get(
+        "https://usquare-test-apis.onrender.com/vehicle/64ab899ce8f57400325154f9",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log("formValues", res.data.data);
+        form.setValues(res.data.data);
+      });
+  };
+  useEffect(() => {
+    if (params.id) {
+      getFormValues();
+    }
+    // const token = localStorage.getItem("token");
+    // axios
+    //   .get(
+    //     "https://usquare-test-apis.onrender.com/vehicle/64ab899ce8f57400325154f9",
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     console.log("formValues", res.data.data);
+    //     form.setValues(res.data.data);
+    //   });
+  }, [params.id]);
   return (
     <Box className={classes.addvhicleBox}>
       {/* ...Top Part Start... */}
       <Box className={classes.topBoxText}>
         <Title order={3} className={classes.topBoxHeading}>
-          Add Vehicle
+          {id ? "Edit Vehicle" : "Add Vehicle"}
         </Title>
         <Text className={classes.topBoxdecription}>
           Fill In the data of Vehicle Registration. It will take A Couple of
           Minutes
         </Text>
         <br />
-        <Button onClick={()=>navigate("viewvehicle")
-        }
-        >View Vehicle</Button>
+        <Button onClick={() => navigate("/viewvehicle")}>View Vehicle</Button>
       </Box>
       {/* ...Top Part End... */}
 
       {/* ...Grid Form Start... */}
       <form
         onSubmit={form.onSubmit(async (values) => {
+          const navigate = useNavigate()
           const token = localStorage.getItem("token");
-          const body = { ...values, state:"Maryland" };
+          const body = { ...values, state: "Maryland" };
           console.log("token", token);
-
-          const response = await axios.post(
-            "https://usquare-test-apis.onrender.com/vehicle",
-            body,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          console.log(response);
+          if (!params?.id) {
+            const response = await axios.post(
+              "https://usquare-test-apis.onrender.com/vehicle",
+              body,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            console.log(response);
+            form.reset();
+          } else {
+            const res = await axios.patch(
+              "https://usquare-test-apis.onrender.com/vehicle/64ab899ce8f57400325154f9",
+              body,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            console.log("dataUpdated", res);
+            
+          
+          }
         })}
       >
         {/* ...Form Start... */}
@@ -380,7 +434,7 @@ const AddVhicleForm = () => {
                   { value: "5", label: "Hydrogen" },
                   { value: "6", label: "flexFuel" },
                 ]}
-                // {...form.getInputProps("fuelType")}
+                {...form.getInputProps("fuelType")}
               />
             </Grid.Col>
             <Grid.Col lg={6} md={6} sm={12}>
@@ -388,7 +442,7 @@ const AddVhicleForm = () => {
                 withAsterisk
                 label="Horse Power"
                 placeholder=""
-                // {...form.getInputProps("horsePower")}
+                {...form.getInputProps("horsePower")}
               ></TextInput>
             </Grid.Col>
             <Grid.Col lg={6} md={6} sm={12}>
@@ -646,7 +700,8 @@ const AddVhicleForm = () => {
           >
             Reset
           </Button>
-          <Button type="submit">Add</Button>
+          <Button type="submit"> {id ? "Update" : "Add Vehicle" 
+          }</Button>
         </Group>
       </form>
     </Box>

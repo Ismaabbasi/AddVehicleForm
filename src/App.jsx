@@ -9,7 +9,8 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AddVhicleForm />}></Route>
-          <Route path="viewvehicle" element={<ViewVehicle />}></Route>
+          <Route path="/viewvehicle" element={<ViewVehicle />}></Route>
+          <Route path="/:id" element={<AddVhicleForm />}></Route>
         </Routes>
       </BrowserRouter>
       {/* <div>
